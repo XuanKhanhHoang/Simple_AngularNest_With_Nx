@@ -1,0 +1,51 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+<form class="p-3">
+  <div class="mb-4">
+    <label for="title" class="block text-sm font-medium text-gray-700"
+      >Tiêu đề</label
+    >
+    <input
+      type="text"
+      readonly
+      [value]="news?.title"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    />
+  </div>
+
+  <div class="mb-4">
+    <label for="author" class="block text-sm font-medium text-gray-700"
+      >Tác giả</label
+    >
+    <input
+      type="text"
+      readonly
+      [value]="news?.author?.name"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    />
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700">Thể loại</label>
+    <input
+      type="text"
+      readonly
+      *ngFor="let item of news?.category_refs"
+      [value]="item.category.name"
+      class="mt-1 block w-full p-2 mb-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    />
+  </div>
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700">Thời gian tạo</label>
+    <input
+      type="text"
+      readonly
+      [value]="news?.create_at"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    />
+  </div>
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700">Nội dung</label>
+
+    <div class="bg-white border p-2 ql-editor" [innerHTML]="safeContent"></div>
+  </div>
+</form>

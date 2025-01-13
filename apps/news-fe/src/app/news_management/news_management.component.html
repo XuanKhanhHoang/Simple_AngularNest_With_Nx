@@ -1,0 +1,263 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<!-- component -->
+<div class="text-gray-900 bg-gray-200">
+  <div class="p-4 flex justify-between">
+    <h1 class="text-3xl">Quản lí bài viết</h1>
+  </div>
+  <form class="flex flex-row px-3 justify-between w-full">
+    <div class="flex">
+      <label
+        for="location-search"
+        class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+        >Your Email</label
+      >
+      <select
+        id="dropdown-button-2"
+        data-dropdown-toggle="dropdown-search-city"
+        class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+        [value]="searchCol"
+        (change)="changeSearchCol($event)"
+      >
+        <option value="id">ID</option>
+        <option value="title">Tiêu đề</option>
+        <option value="author_name">Tên tác giả</option>
+        <!-- <option value="category_id">Mã thể loại</option> -->
+      </select>
+
+      <div class="relative w-full">
+        <input
+          type="search"
+          [formControl]="searchControl"
+          class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+          placeholder="Tìm kiếm"
+        />
+      </div>
+    </div>
+    <a
+      class="text-white flex flex-row bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 ms-auto py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      href="./news/create"
+      ><svg
+        width="24px"
+        height="24px"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></g>
+        <g id="SVGRepo_iconCarrier">
+          <path
+            d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15"
+            stroke="#1C274C"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          ></path>
+          <path
+            d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7"
+            stroke="#1C274C"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          ></path>
+        </g>
+      </svg>
+      <span class="ms-2 text-nowrap">Thêm mới tin</span></a
+    >
+  </form>
+  <div class="px-3 py-2 flex justify-center flex-col">
+    <p *ngIf="isLoading" class="py-2 bg-white w-full text-center">Loading</p>
+    <p *ngIf="isError" class="py-2 bg-white w-full text-center">
+      Có lỗi xảy ra
+    </p>
+    <table
+      class="w-full text-md bg-white shadow-md rounded mb-4"
+      *ngIf="!isLoading && !isError"
+    >
+      <tbody>
+        <tr class="border-b">
+          <th class="text-left p-2 w-1/12">ID</th>
+          <th class="text-left p-2 w-4/12">Tiêu đề</th>
+          <th class="text-left p-2 w-2/12">Thời gian tạo</th>
+          <th class="text-left p-2 w-2/12">Tác giả</th>
+          <th class="text-left p-2 w-2/12">Thể loại</th>
+          <th class="text-left p-2 w-full">Hành động</th>
+
+          <th></th>
+        </tr>
+        <tr
+          class="border-b hover:bg-orange-100 bg-gray-100"
+          *ngFor="let item of news"
+        >
+          <td class="p-2 w-1/12">
+            <span>{{ item.id }}</span>
+          </td>
+          <td class="p-2">
+            <p>{{ item.title }}</p>
+          </td>
+          <td class="p-2">
+            <span>{{
+              formatDateForView(item.create_at, 'mm:hh dd/mm/yyyy')
+            }}</span>
+          </td>
+          <td class="p-2">
+            <span>{{ item.author.name }}</span>
+          </td>
+          <td class="p-2">
+            <div class="flex flex-col" *ngFor="let cat of item.category_refs">
+              <span class="p-1 px-2 rounded w-fit border my-1 bg-gray-100">{{
+                cat.category.name
+              }}</span>
+            </div>
+          </td>
+
+          <td class="p-2 px-3 !w-3/12">
+            <div class="">
+              <a
+                [href]="'./news/' + item.id"
+                class="w-full flex flex-row text-sm bg-blue-500 hover:bg-blue-700 text-white p-1 px-2 mb-1 rounded focus:outline-none focus:shadow-outline"
+              >
+                <svg
+                  fill="#000000"
+                  width="18px"
+                  height="18px"
+                  viewBox="0 0 64 64"
+                  id="Layer_1_1_"
+                  version="1.1"
+                  xml:space="preserve"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <g>
+                      <path
+                        d="M36,21c0-2.206-1.794-4-4-4s-4,1.794-4,4s1.794,4,4,4S36,23.206,36,21z M30,21c0-1.103,0.897-2,2-2s2,0.897,2,2 s-0.897,2-2,2S30,22.103,30,21z"
+                      ></path>
+                      <path
+                        d="M27,41v6h10v-6h-2V27h-8v6h2v8H27z M29,31v-2h4v14h2v2h-6v-2h2V31H29z"
+                      ></path>
+                      <path
+                        d="M32,1C14.907,1,1,14.907,1,32s13.907,31,31,31s31-13.907,31-31S49.093,1,32,1z M32,61C16.009,61,3,47.991,3,32 S16.009,3,32,3s29,13.009,29,29S47.991,61,32,61z"
+                      ></path>
+                      <path
+                        d="M32,7c-5.236,0-10.254,1.607-14.512,4.649l1.162,1.628C22.567,10.479,27.184,9,32,9c12.682,0,23,10.318,23,23 c0,4.816-1.479,9.433-4.277,13.35l1.628,1.162C55.393,42.254,57,37.236,57,32C57,18.215,45.785,7,32,7z"
+                      ></path>
+                      <path
+                        d="M32,55C19.318,55,9,44.682,9,32c0-4.817,1.479-9.433,4.277-13.35l-1.627-1.162C8.608,21.746,7,26.764,7,32 c0,13.785,11.215,25,25,25c5.236,0,10.254-1.607,14.512-4.649l-1.162-1.628C41.433,53.521,36.816,55,32,55z"
+                      ></path>
+                    </g>
+                  </g>
+                </svg>
+                <span class="text-xs text-nowrap ms-1">Chi tiết</span>
+              </a>
+              <a
+                [href]="'./news/update/' + item.id"
+                class="flex flex-row text-sm bg-green-500 hover:bg-green-700 text-white px-2 p-1 mb-1 rounded focus:outline-none focus:shadow-outline"
+              >
+                <svg
+                  width="18px"
+                  height="18px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z"
+                      stroke="#000000"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                    <path
+                      d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13"
+                      stroke="#000000"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </g>
+                </svg>
+                <span class="text-xs text-nowrap ms-1">Cập nhật</span>
+              </a>
+              <button
+                type="button"
+                class="w-full flex flex-row text-sm bg-red-500 hover:bg-red-700 text-white px-2 p-1 mb-1 rounded focus:outline-none focus:shadow-outline"
+                (click)="handleModal(item.id)"
+              >
+                <svg
+                  fill="#000000"
+                  width="18px"
+                  height="18px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M831.24 280.772c5.657 0 10.24-4.583 10.24-10.24v-83.528c0-5.657-4.583-10.24-10.24-10.24H194.558a10.238 10.238 0 00-10.24 10.24v83.528c0 5.657 4.583 10.24 10.24 10.24H831.24zm0 40.96H194.558c-28.278 0-51.2-22.922-51.2-51.2v-83.528c0-28.278 22.922-51.2 51.2-51.2H831.24c28.278 0 51.2 22.922 51.2 51.2v83.528c0 28.278-22.922 51.2-51.2 51.2z"
+                    ></path>
+                    <path
+                      d="M806.809 304.688l-58.245 666.45c-.544 6.246-6.714 11.9-12.99 11.9H290.226c-6.276 0-12.447-5.654-12.99-11.893L218.99 304.688c-.985-11.268-10.917-19.604-22.185-18.619s-19.604 10.917-18.619 22.185l58.245 666.45c2.385 27.401 26.278 49.294 53.795 49.294h445.348c27.517 0 51.41-21.893 53.796-49.301l58.244-666.443c.985-11.268-7.351-21.201-18.619-22.185s-21.201 7.351-22.185 18.619zM422.02 155.082V51.3c0-5.726 4.601-10.342 10.24-10.342h161.28c5.639 0 10.24 4.617 10.24 10.342v103.782c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48V51.3c0-28.316-22.908-51.302-51.2-51.302H432.26c-28.292 0-51.2 22.987-51.2 51.302v103.782c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48z"
+                    ></path>
+                    <path
+                      d="M496.004 410.821v460.964c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48V410.821c0-11.311-9.169-20.48-20.48-20.48s-20.48 9.169-20.48 20.48zm-192.435 1.767l39.936 460.964c.976 11.269 10.903 19.612 22.171 18.636s19.612-10.903 18.636-22.171l-39.936-460.964c-.976-11.269-10.903-19.612-22.171-18.636s-19.612 10.903-18.636 22.171zm377.856-3.535l-39.936 460.964c-.976 11.269 7.367 21.195 18.636 22.171s21.195-7.367 22.171-18.636l39.936-460.964c.976-11.269-7.367-21.195-18.636-22.171s-21.195 7.367-22.171 18.636z"
+                    ></path>
+                  </g>
+                </svg>
+                <span class="text-xs text-nowrap ms-1">Xóa</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="mx-auto">
+      <div class="flex">
+        <!-- Previous Button -->
+        <button
+          [disabled]="page - 1 == 0"
+          (click)="onPageChange(page - 1)"
+          class="flex items-center justify-center px-4 h-10 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        >
+          Previous
+        </button>
+
+        <!-- Next Button -->
+        <button
+          [disabled]="page == total_page"
+          (click)="onPageChange(page + 1)"
+          class="flex items-center justify-center px-4 h-10 ms-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <warning_modal
+      *ngIf="choosingId != -1"
+      [content]="'Bạn chắc muốn xóa nó chứ'"
+      [title]="'Xóa bài viết có id là: ' + choosingId"
+      (dataEmitter)="warningModalReturn($event)"
+    />
+  </div>
+</div>

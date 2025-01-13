@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model news{
+  id Int @id @default(autoincrement())
+  title String
+  content String @db.LongText
+  create_at DateTime @default(now())
+  author_id Int?
+  category_refs Category_Ref[] 
+  author Author? @relation(fields: [author_id],references: [id],onDelete: SetNull)
+}
+
+model Category{
+  id Int  @id @default(autoincrement())
+  name String 
+  category_refs Category_Ref[] 
+}
+
+model Category_Ref {
+  product_id Int
+  category_id Int
+  product news @relation(fields: [product_id],references: [id],onDelete: Cascade)
+  category Category  @relation(fields: [category_id],references: [id],onDelete: Cascade)
+
+  @@id([product_id,category_id])
+}
+model Author{
+  id Int @id @default(autoincrement())
+  name String 
+  products news[]
+}

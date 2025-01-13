@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
-
+import { RouterOutlet } from '@angular/router';
+import { HeaderLayoutComponent } from './share/header_layout/header_layout.component';
+import { ToastService, AngularToastifyModule } from 'angular-toastify';
 @Component({
-  imports: [NxWelcomeComponent, RouterModule],
   selector: 'app-root',
+  imports: [HeaderLayoutComponent, AngularToastifyModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  providers: [ToastService],
 })
 export class AppComponent {
-  title = 'news-fe';
+  title = 'news_project_fe';
 }

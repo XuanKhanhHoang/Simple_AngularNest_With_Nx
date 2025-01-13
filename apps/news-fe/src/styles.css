@@ -1,5 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* You can add global styles to this file, and also import other style files */
+@layer utilities {
+  .center_absolute {
+    position: absolute; /* Make the element absolutely positioned */
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto; /* Center the element */
+  }
+}
